@@ -30,24 +30,28 @@ var bot = controller.spawn({
     });
 
 
-//a sample knowledgebaseObject supposed to come from DB per customer
+//a sample knowledgebaseObject that should persist on a DB come from DB per customer
 
 var knowledgebaseObject = {
 
   customerName: 'Comfort Chefs',
+  helpKeyword: 'help',
   customerID: 12631616216321,
   address: '16 Brookers Lane',
-  welcomeMessage: "Hi, my name is Funke, I'm a bot, Welcome to Comfort Chefs! You can say 'help' anytime to get a list of things I can assist you with.",
-  menuObject: {
-
+  optionList:'\n 1. Give Feedback \n 2. Contact Information \n 3. Services \n 4. Talk to Someone',
+  welcomeMessage: function(name) {
+      
+      return "Hi "+ name +", my name is Funke, I'm a bot, Welcome to "+ this.customerName +" You can say '"+ this.helpKeyword +"' anytime to get a list of things I can assist you with."
 
   },
+
+  menuObject: {
 
   hoursOfOperation: [ 'Weekdays: 10am - 7pm | Weekends: 11am - 8pm'],
   faq: [
 
       {
-        question: 'Sample faq',
+        question: 'What time is  faq',
         answer: ' Sample answer'
       },
 
@@ -57,61 +61,20 @@ var knowledgebaseObject = {
       }
   ]
 }
-
+};
 
 
 controller.hears('help', ['direct_message','direct_mention','mention'],function(bot,message) {
 
-var optionList = '\n 1. Give Feedback \n 2. Contact Information \n 3. Services \n 4. Talk to Someone';
+  bot.startConversation(message, function(err, convo){
 
+      convo.addQuestion(knowledgebaseObject.optionList, function(response, convo){
+        convo.say('you picked ' + response.text)
 
-
- // start a conversation to handle this response.
-  bot.startConversation(message,function(err,convo) {
-
-    convo.addQuestion('Pick an option  '+ optionList,[
-      {
-        pattern: bot.utterances.yes,
-        callback: function(response,convo) {
-          convo.say('1. Give Feedback');
-          convo.next();
-        }
-      },
-      {
-        pattern: bot.utterances.yes,
-        callback: function(response,convo) {
-          convo.say('Great! I will continue...');
-          // do something else...
-          convo.next();
-
-        }
-      },
-      {
-        pattern: bot.utterances.no,
-        callback: function(response,convo) {
-          convo.say('Perhaps later.');
-          // do something else...
-          convo.next();
-        }
-      },
-      {
-        default: true,
-        callback: function(response,convo) {
-          // just repeat the question
-          convo.repeat();
-          convo.next();
-        }
-      }
-    ],{},'default');
-
+      })
   })
-
-
-});
-
-
-
-
+  
+ });
 
 
 
@@ -123,8 +86,10 @@ controller.hears('hello',['direct_message','direct_mention','mention'],function(
 
     convo.addQuestion('What is your name', function(response,convo) {
 
-      // convo.say('Cool, you said: ' + response.text);
-      convo.say(knowledgebaseObject.welcomeMessage);
+      convo.say('Cool, you said: ' + response.text);
+      convo.say(knowledgebaseObject.welcomeMessage(response.text));
+      convo.say(knowledgebaseObject.menuObject)
+
       convo.next();
 
     },{},'default');
@@ -181,51 +146,50 @@ controller.hears('hello',['direct_message','direct_mention','mention'],function(
 });
 
 
-//search youtube
-//search request
-controller.hears('search',['direct_message', 'direct_mention', 'mention'], function(bot, message) {
+// //search request
+// controller.hears('search',['direct_message', 'direct_mention', 'mention'], function(bot, message) {
 
-var str = message.text;
+// var str = message.text;
 
-//remove search keyword
-var newStr = str.replace(/search/i, '');
+// //remove search keyword
+// var newStr = str.replace(/search/i, '');
 
-//remove whitespace
-newStr = newStr.replace(/ /i,'');
-console.log(newStr);
+// //remove whitespace
+// newStr = newStr.replace(/ /i,'');
+// console.log(newStr);
 
-var bashCommand = './runyoutube.sh ' + '\'' + newStr + '\'';
+// var bashCommand = './runyoutube.sh ' + '\'' + newStr + '\'';
 
-dir = exec(bashCommand, function(err, stdout, stderr) {
-  if (err) {
-    // should have err.code here?  
-  }
-  //bot.reply(message, stdout )
-  console.log(stdout);
-});
+// dir = exec(bashCommand, function(err, stdout, stderr) {
+//   if (err) {
+//     // should have err.code here?  
+//   }
+//   //bot.reply(message, stdout )
+//   console.log(stdout);
+// });
 
-dir.on('exit', function (code) {
-  // exit code is code
-  bot.reply(message, 'Song Added to Queue' )
-});
+// dir.on('exit', function (code) {
+//   // exit code is code
+//   bot.reply(message, 'Song Added to Queue' )
+// });
 
 
-//bot.reply(message, newStr )
+// //bot.reply(message, newStr )
 
   
-  var sendSearch = function(searchterm){
+//   var sendSearch = function(searchterm){
 
-            var options = {
+//             var options = {
 
-              url: 'http://gplayer.herokuapp.com/api/search?q='+searchterm,
-              headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',                  
-            }
-          }
-            console.log('making network request')  
- }
-})
+//               url: 'http://gplayer.herokuapp.com/api/search?q='+searchterm,
+//               headers: {
+//                   'Accept': 'application/json',
+//                   'Content-Type': 'application/json',                  
+//             }
+//           }
+//             console.log('making network request')  
+//  }
+// })
 
 
 
