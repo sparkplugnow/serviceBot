@@ -1,13 +1,13 @@
 var Botkit = require('botkit');
 var os = require('os');
-//var komponist = require('komponist');
-//var request = require('request');
-//var sys = require('sys')
-//var exec = require('child_process').exec;
+var komponist = require('komponist');
+var request = require('request');
+var sys = require('sys')
+var exec = require('child_process').exec;
 var token = require('./token.js');
 
 
-//const playlistStore = []
+const playlistStore = []
 
 // Connect to slack
 
@@ -25,9 +25,9 @@ var bot = controller.spawn({
 });
 
 
-// var client = komponist.createConnection(6600, 'localhost', function() {
-//   console.log('client created')
-//});
+ var client = komponist.createConnection(6600, 'localhost', function() {
+   console.log('client created')
+});
 
 
 //a sample knowledgebaseObject that should persist on a DB come from DB per customer
@@ -38,7 +38,7 @@ var knowledgebaseObject = {
   helpKeyword: 'help',
   customerID: 12631616216321,
   address: '16 Brookers Lane',
-  optionList: '\n 1. Give Feedback \n 2. Frequently asked questions (FAQs)  \n 3. Contact Information \n 4. Services \n 5. Talk to Someone',
+  optionList: '\n 1. Give Feedback \n 2. Frequently asked questions (FAQs)  \n 3. Contact Information \n 4. Talk to Someone',
   welcomeMessage: function (name) {
 
     return "Hi " + name + ", my name is Funke, I'm a bot, Welcome to " + this.customerName + " You can say '" + this.helpKeyword + "' anytime to get a list of things I can assist you with."
@@ -60,7 +60,6 @@ var knowledgebaseObject = {
         answer: ' Sample answer'
       }
     ],
-    services: ['service1', 'service 2', 'service 3']
   }
 };
 
