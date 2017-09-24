@@ -53,18 +53,30 @@ var knowledgebaseObject = {
     faq: [
 
       {
-        question: 'What time is  faq',
+        question: 'What time are you open',
+        answer: ' Sample answer'
+      },
+      {
+        question: 'When will Donald Trump leave office',
+        answer: ' Sample answer'
+      },
+      {
+        question: 'What is the best kitchen in the world',
         answer: ' Sample answer'
       },
 
       {
-        question: 'Sample faq',
+        question: 'how do i order food',
+        answer: ' Sample answer'
+      },
+      {
+        question: 'ETC... ETC...',
         answer: ' Sample answer'
       }
     ],
     contactInformation: {},
 
-    services: ['service1', 'service 2', 'service 3']
+    services: ['Cooking', 'Catering','Broiling']
   }
 };
 
@@ -102,7 +114,27 @@ controller.hears('help', ['direct_message', 'direct_mention', 'mention'], functi
     convo.addQuestion(knowledgebaseObject.optionList, function (response, convo) {
       convo.say('you picked ' + response.text);
 
-      selectOption();
+      //selectOption();
+      switch (response.text) {
+        //feedback option
+        case '1': bot.reply(message, 'Enter your feedback here please');
+          break;
+        //faq action
+        case '2': bot.reply(message, faq());
+          break;
+        //contact information action
+        case '3': bot.reply(message, 'getting contact information ');
+          break;
+        //service action
+        case '4': bot.reply(message,'we offer the following services \n'+ service());
+          break;
+        //call action
+        case '5': bot.reply(message, 'Hold on a bit, putting your call through.....');
+          break;
+        //Default action
+        default: bot.reply(message, 'kindly pick correct option');
+      }
+
 
     })
   })
@@ -110,84 +142,23 @@ controller.hears('help', ['direct_message', 'direct_mention', 'mention'], functi
 });
 
 
-var selectOption = function () {
-  switch (response.text) {
-    //feedback option
-    case '1': bot.reply(message, 'Enter your feedback here please');
-      break;
-    //faq action
-    case '2': bot.reply(message, faq());
-      break;
-    //contact information action
-    case '3': bot.reply(message, 'contact information action here');
-      break;
-    //service action
-    case '4': bot.reply(message, service());
-      break;
-    //call action
-    case '5': bot.reply(message, 'call action here');
-      break;
-    //Default action
-    default: bot.reply(message, 'pick correct option');
-  }
-}
-//functional units
+
+
+//FUNCTIONAL UNITS
 
 //list out faqs
 var faq = function () {
-  var faqs = (knowledgebaseObject.menuObject.faq).map(function (faq) {
-    var list = (faq.question);
-    return list;
-  }).forEach(function (faq, idx) {
-    console.log(idx + 1, ':', faq)
-  })
+  var faqs = (knowledgebaseObject.menuObject.faq).map(function (faq, idx) {
+    var list = (idx + 1, ':', faq.question);
+    return list
+  }).join('\n');
+  return faqs;
 }
 
 //list out services
 var service = function () {
-  var services = (knowledgebaseObject.menuObject.services).forEach(function (service, idx) {
-    console.log(idx + 1, ':', service)
-  })
+  var services = (knowledgebaseObject.menuObject.services).map(function (service, idx) {
+    return (idx + 1, ':', service)
+  }).join('\n');
+  return services;
 }
-
-  /*controller.hears('list', ['direct_message', 'direct_mention', 'mention'], function (bot, message) {
-
-    str = message.text;
-    client.playlist(function (err, info) {
-
-      info = info.toString();
-
-      var reply_with_attachments = {
-
-        'attachments': [
-          {
-            'fallback': 'List of songs in Playlist',
-            'title': 'Playlist',
-            'text': info,
-            "fields": [
-              {
-                "Song 1": 'test',
-
-                "short": false
-              }
-
-
-            ],
-
-            'color': '#7CD197'
-          }
-        ],
-        'icon_url': 'http://southpawgroup.com/gidiloungeart/images/albums_thumbnail/Untitled.jpg'
-      }
-
-
-      bot.reply(message, reply_with_attachments);
-
-
-    })
-
-
-
-
-  })*/
-
